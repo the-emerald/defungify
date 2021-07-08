@@ -3,13 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
+contract Defungify is ERC721, ERC721Enumerable, ERC721Burnable {
   using Counters for Counters.Counter;
 
   Counters.Counter private _tokenIdCounter;
@@ -21,7 +19,7 @@ contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnabl
     token = token_;
   }
 
-  function safeMint(address to, uint256 amount) public whenNotPaused {
+  function safeMint(address to, uint256 amount) public {
     // Mint NFT, set amount
     _safeMint(to, _tokenIdCounter.current());
     _amountInside[_tokenIdCounter.current()] = amount;
@@ -47,15 +45,7 @@ contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnabl
     return _amountInside[tokenId];
   }
 
-  function pause() public onlyOwner {
-    _pause();
-  }
-
-  function unpause() public onlyOwner {
-    _unpause();
-  }
-
-  function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal whenNotPaused override(ERC721, ERC721Enumerable) {
+  function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
 
