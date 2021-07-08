@@ -25,7 +25,7 @@ describe("Defungify", function () {
     it("Should be able to mint", async function () {
         await erc20Token.connect(accounts[1]).approve(defungify.address, 100000);
         // 100,000
-        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000);
+        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000, "");
         expect(await defungify.amountInside(0)).to.equal(100000);
         expect(await erc20Token.balanceOf(await accounts[1].getAddress())).to.equal(100000000 - 100000);
     });
@@ -34,12 +34,14 @@ describe("Defungify", function () {
         await erc20Token.connect(accounts[1]).approve(defungify.address, 100000);
 
         // 100,000
-        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000);
+        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000, "");
         expect(await defungify.amountInside(0)).to.equal(100000);
         expect(await erc20Token.balanceOf(await accounts[1].getAddress())).to.equal(100000000 - 100000);
 
         await defungify.connect(accounts[1]).burn(0);
         expect(await defungify.amountInside(0)).to.equal(0);
+        // @ts-ignore
+        expect(defungify.ownerOf(0)).to.be.revertedWith("ERC721: owner query for nonexistent token");
         expect(await erc20Token.balanceOf(await accounts[1].getAddress())).to.equal(100000000);
     });
 
@@ -47,7 +49,7 @@ describe("Defungify", function () {
         await erc20Token.connect(accounts[1]).approve(defungify.address, 100000);
 
         // 100,000
-        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000);
+        await defungify.connect(accounts[1]).safeMint(await accounts[1].getAddress(), 100000, "");
         expect(await defungify.amountInside(0)).to.equal(100000);
         expect(await erc20Token.balanceOf(await accounts[1].getAddress())).to.equal(100000000 - 100000);
 
@@ -56,6 +58,8 @@ describe("Defungify", function () {
 
         await defungify.connect(accounts[0]).burn(0);
         expect(await defungify.amountInside(0)).to.equal(0);
+        // @ts-ignore
+        expect(defungify.ownerOf(0)).to.be.revertedWith("ERC721: owner query for nonexistent token");
         expect(await erc20Token.balanceOf(await accounts[0].getAddress())).to.equal(100000000 + 100000);
     });
 
