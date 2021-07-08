@@ -27,6 +27,7 @@ export default {
   },
   gasReporter: {
     currency: 'USD',
-    gasPrice: 1
+    gasPrice: 1,
+    excludeContracts: ["ERC20PresetMinterPauser"]
   }
 };
