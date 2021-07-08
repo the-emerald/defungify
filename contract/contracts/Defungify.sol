@@ -13,7 +13,7 @@ contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnabl
   using Counters for Counters.Counter;
 
   Counters.Counter private _tokenIdCounter;
-  mapping(uint256 => uint256) private amountInside;
+  mapping(uint256 => uint256) private _amountInside;
 
   IERC20 public token;
 
@@ -24,7 +24,7 @@ contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnabl
   function safeMint(address to, uint256 amount) public whenNotPaused {
     // Mint NFT, set amount
     _safeMint(to, _tokenIdCounter.current());
-    amountInside[_tokenIdCounter.current()] = amount;
+    _amountInside[_tokenIdCounter.current()] = amount;
     _tokenIdCounter.increment();
 
     // Send funds to contract
@@ -35,16 +35,16 @@ contract Defungify is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnabl
   function burn(uint256 tokenId) public override(ERC721Burnable) {
     // Burn token, set amount to 0
     super.burn(tokenId);
-    uint256 amount = amountInside[tokenId];
-    amountInside[tokenId] = 0;
+    uint256 amount = _amountInside[tokenId];
+    _amountInside[tokenId] = 0;
 
     // Send
     bool t = token.transfer(msg.sender, amount);
     require(t, "token transfer failed");
   }
 
-  function amountInToken(uint256 tokenId) public view returns (uint256) {
-    return amountInside[tokenId];
+  function amountInside(uint256 tokenId) public view returns (uint256) {
+    return _amountInside[tokenId];
   }
 
   function pause() public onlyOwner {
