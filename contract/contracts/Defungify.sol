@@ -15,7 +15,7 @@ contract Defungify is ERC721, ERC721Enumerable, ERC721Burnable {
 
   IERC20 public token;
 
-  constructor(IERC20 token_, string memory name, string memory ticker) ERC721(name, ticker) {
+  constructor(IERC20 token_, string memory name, string memory symbol) ERC721(name, symbol) {
     token = token_;
   }
 
