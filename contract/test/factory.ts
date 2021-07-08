@@ -2,7 +2,7 @@
 import {ethers} from "hardhat";
 import {expect} from "chai";
 
-describe("Defungify", function () {
+describe("Defungify Factory", function () {
     let accounts: any;
     let erc20Token: any;
     let defungifyFactory: any;
@@ -24,6 +24,14 @@ describe("Defungify", function () {
 
     it("Should be able to deploy a Defungify", async function () {
         await defungifyFactory.deployDf(erc20Token.address);
+    });
+
+    it("Check deployed defungify works", async function () {
+        await defungifyFactory.deployDf(erc20Token.address);
+        const deployed = await ethers.getContractAt("Defungify", await defungifyFactory.deployedContracts(erc20Token.address));
+
+        await erc20Token.connect(accounts[0]).approve(deployed.address, 100000);
+        deployed.connect(accounts[0]).safeMint(await accounts[0].getAddress(), 100000, "");
     });
 
     it("Should not be able to deploy twice", async function () {
