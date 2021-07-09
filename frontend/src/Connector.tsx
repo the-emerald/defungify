@@ -2,6 +2,7 @@ import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {InjectedConnector} from "@web3-react/injected-connector";
 import {Button} from "react-bootstrap";
+import {AccountInfo} from "./AccountInfo";
 
 export const injectedConnector = new InjectedConnector({
     supportedChainIds: [
@@ -23,10 +24,7 @@ export function Connector() {
     return (
         <div>
             { web3.active ? (
-                <div>
-                    <p>Address: {web3.account}</p>
-                    <p>Chain: {web3.chainId}</p>
-                </div>
+                <AccountInfo/>
             ) : <Button onClick={onClick}>Connect to MetaMask</Button> }
         </div>
     )
