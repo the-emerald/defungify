@@ -1,26 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Web3ReactProvider} from '@web3-react/core';
+import {Web3Provider} from "@ethersproject/providers";
+import {Connector} from "./Connector";
+import {Col, Container, Row} from "react-bootstrap";
+import {Header} from "./Header";
+
+function getLibrary(provider: any): Web3Provider {
+    const lib = new Web3Provider(provider);
+    lib.pollingInterval = 12000;
+    return lib;
+}
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <Container fluid className="mt-2">
+            <Web3ReactProvider getLibrary={getLibrary}>
+                <Row className="my-2">
+                    <Col>
+                        <Header/>
+                    </Col>
+                </Row>
+                <Row className="my-2">
+                    <Col>
+                        <Connector/>
+                    </Col>
+                </Row>
+                <Row className="my-2">
+                    <Col>
+                        <p>Hello, world!</p>
+                    </Col>
+                </Row>
+            </Web3ReactProvider>
+        </Container>
+
+    );
 }
 
 export default App;
