@@ -36,16 +36,22 @@ export function PacketDeploy(props: PacketDeployProps) {
         }
     }
 
+    const handleErcError = (e: any) => {
+        console.log(e);
+        alert("Error while fetching ERC-20 token");
+    }
+
     useEffect(() => {
         if (symbol == null) {
             targetErc20.name().then(r => {
                 setName(r)
-            });
+            })
+                .catch((e) => handleErcError(e));
         }
         if (symbol == null) {
             targetErc20.symbol().then(r => {
                 setSymbol(r)
-            });
+            })
         }
         if (balance == null) {
             targetErc20.balanceOf(web3.account!).then(r => {
