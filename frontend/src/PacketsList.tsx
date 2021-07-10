@@ -9,6 +9,9 @@ export function PacketsList() {
     return (
         <div>
             <h4>Your packets</h4>
+            <p><b>Burn</b> packets to release their contents into your wallet.</p>
+            <p><b>Transfer</b> packets to other people.</p>
+
             <Row>
                 <Col xs={3}>
                     <Table striped hover>
