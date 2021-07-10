@@ -22,6 +22,7 @@ export function PacketsList(props: PacketsListProps) {
     const web3 = useWeb3React<Web3Provider>();
     const [packets, setPackets] = useState<Array<Packet>>([]);
 
+
     useEffect(() => {
         const enumeratePackets = async () => {
             const numberOwned = (await props.defungify.balanceOf(web3.account!)).toNumber();
@@ -74,7 +75,6 @@ export function PacketsList(props: PacketsListProps) {
 
     }, [props.defungify, web3.account])
 
-    // TODO: Make <tr>s a separate component
     return (
         <div>
             <h4>Your packets</h4>
@@ -95,13 +95,16 @@ export function PacketsList(props: PacketsListProps) {
                         </thead>
                         <tbody>
                         {
-                            packets.map((p) => <PacketRow key={p.id} packet={p} defungify={props.defungify}/>)
+                            packets.map((p) => <PacketRow
+                                key={p.id}
+                                packet={p}
+                                defungify={props.defungify}/>
+                            )
                         }
                         </tbody>
                     </Table>
                 </Col>
             </Row>
-
         </div>
     )
 }
