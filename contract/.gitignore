@@ -6,3 +6,5 @@ artifacts
 
 # Typechain
 typechain
+
+secrets.ts
