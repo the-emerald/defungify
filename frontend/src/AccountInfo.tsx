@@ -5,6 +5,7 @@ import {Button} from "react-bootstrap";
 let chainNames: Map<number, string> = new Map();
 chainNames.set(1, "mainnet");
 chainNames.set(100, "xdai");
+chainNames.set(4, "rinkeby (TESTNET)")
 
 
 export function AccountInfo() {
