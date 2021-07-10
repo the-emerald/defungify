@@ -5,8 +5,8 @@ import {CreatePacketForm} from "./CreatePacketForm";
 import {Defungify, Defungify__factory, DefungifyFactory__factory, IERC20, IERC20Metadata__factory} from "./typechain";
 import {useEffect, useState} from "react";
 import {factoryLocation} from "./factoryLocation";
-import {BigNumber} from "ethers";
-import {formatEther} from "ethers/lib/utils";
+import {BigNumber, EventFilter} from "ethers";
+import {formatEther, hexZeroPad, id} from "ethers/lib/utils";
 import {Allowance} from "./Allowance";
 
 interface PacketDeployProps {
@@ -45,7 +45,7 @@ export function PacketDeploy(props: PacketDeployProps) {
     }
 
     useEffect(() => {
-        if (symbol == null) {
+        if (name == null) {
             metadata.name().then(r => {
                 setName(r)
             })
@@ -61,6 +61,9 @@ export function PacketDeploy(props: PacketDeployProps) {
                 setBalance(r);
             })
         }
+    }, [name, symbol, balance, metadata, web3.account, web3.library])
+
+    useEffect(() => {
         if (props.defungify == null) {
             dfFactory.deployedContracts(props.erc20.address).then(r => {
                 if (r === "0x0000000000000000000000000000000000000000") {
@@ -71,7 +74,39 @@ export function PacketDeploy(props: PacketDeployProps) {
                 }
             })
         }
-    }, [name, symbol, balance, metadata, web3.account, web3.library, dfFactory, props])
+    }, [dfFactory, props, web3.library]);
+
+    useEffect(() => {
+        const filterTransferOut: EventFilter = {
+            address: props.erc20.address,
+            topics: [
+                id("Transfer(address,address,uint256)"),
+                hexZeroPad(web3.account!, 32)
+            ]
+        };
+
+        const filterTransferIn: EventFilter = {
+            address: props.erc20.address,
+            topics: [
+                id("Transfer(address,address,uint256)"),
+                // @ts-ignore
+                null,
+                hexZeroPad(web3.account!, 32)
+            ]
+        };
+
+        props.erc20.on(filterTransferIn, () => {
+            props.erc20.balanceOf(web3.account!).then((r) => {
+                setBalance(r);
+            })
+        });
+
+        props.erc20.on(filterTransferOut, () => {
+            props.erc20.balanceOf(web3.account!).then((r) => {
+                setBalance(r);
+            })
+        });
+    }, [props.erc20, web3.account])
 
     return (
         <div>
