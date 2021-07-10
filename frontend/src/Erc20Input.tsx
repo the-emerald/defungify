@@ -1,16 +1,21 @@
 import {Col, Form} from "react-bootstrap";
 import {ethers} from "ethers";
+import {IERC20__factory} from "./typechain";
+import {useWeb3React} from "@web3-react/core";
+import {Web3Provider} from "@ethersproject/providers";
 
 export interface Erc20InputProps {
     setErc20: any
 }
 
 export function Erc20Input(props: Erc20InputProps) {
+    const web3 = useWeb3React<Web3Provider>();
+
     const onBlur = (event: any) => {
         const form = event.currentTarget;
         try {
             const address = ethers.utils.getAddress(form.erc20Input.value);
-            props.setErc20(address);
+            props.setErc20(IERC20__factory.connect(address, web3.library!));
         }
         catch (e) {
             alert("Not a valid address!");
