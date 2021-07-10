@@ -5,7 +5,7 @@ import {Connector} from "./Connector";
 import {Col, Container, Row} from "react-bootstrap";
 import {Header} from "./Header";
 import {PacketDeploy} from "./PacketDeploy";
-import {ShowBurn} from "./ShowBurn";
+import {PacketsList} from "./PacketsList";
 
 
 function App() {
@@ -47,7 +47,7 @@ function App() {
                 web3.active ?
                     <Row className="my-2">
                         <Col>
-                            <ShowBurn/>
+                            <PacketsList/>
                         </Col>
                     </Row>
                     : <div/>
