@@ -6,11 +6,8 @@ import {AccountInfo} from "./AccountInfo";
 
 export const injectedConnector = new InjectedConnector({
     supportedChainIds: [
-        1, // Mainet
-        3, // Ropsten
-        4, // Rinkeby
-        5, // Goerli
-        42, // Kovan
+        1, // Mainnet
+        100, // xDAI
     ],
 })
 

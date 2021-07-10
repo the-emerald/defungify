@@ -1,20 +1,17 @@
 import React from 'react';
-import {Web3ReactProvider} from '@web3-react/core';
+import {useWeb3React} from '@web3-react/core';
 import {Web3Provider} from "@ethersproject/providers";
 import {Connector} from "./Connector";
 import {Col, Container, Row} from "react-bootstrap";
 import {Header} from "./Header";
+import {ContractInteraction} from "./ContractInteraction";
 
-function getLibrary(provider: any): Web3Provider {
-    const lib = new Web3Provider(provider);
-    lib.pollingInterval = 12000;
-    return lib;
-}
 
 function App() {
+    const web3 = useWeb3React<Web3Provider>();
+
     return (
         <Container fluid className="mt-2">
-            <Web3ReactProvider getLibrary={getLibrary}>
                 <Row className="my-2">
                     <Col>
                         <Header/>
@@ -25,14 +22,14 @@ function App() {
                         <Connector/>
                     </Col>
                 </Row>
-                <Row className="my-2">
+                <Row className="my-2 mt-3">
                     <Col>
-                        <p>Hello, world!</p>
+                        {
+                            web3.active ? <ContractInteraction/>: <div/>
+                        }
                     </Col>
                 </Row>
-            </Web3ReactProvider>
         </Container>
-
     );
 }
 
