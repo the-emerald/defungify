@@ -7,7 +7,8 @@ import {Header} from "./Header";
 import {PacketDeploy} from "./PacketDeploy";
 import {PacketsList} from "./PacketsList";
 
-const PLACEHOLDER_ERC20 = "0xd099F2FD6df4f649B2cD9A80EfCA8d496D9c3825";
+const PLACEHOLDER_ERC20_DEPLOYED = "0xd099F2FD6df4f649B2cD9A80EfCA8d496D9c3825";
+const PLACEHOLDER_ERC20_NOT = "0x4db7326bbf4006f872d17c432ec35f825586d596";
 
 function App() {
     const web3 = useWeb3React<Web3Provider>();
@@ -38,7 +39,7 @@ function App() {
                 web3.active ?
                     <Row className="my-2">
                         <Col>
-                            <PacketDeploy address={PLACEHOLDER_ERC20}/>
+                            <PacketDeploy address={PLACEHOLDER_ERC20_NOT}/>
                         </Col>
                     </Row>
                     : <div/>

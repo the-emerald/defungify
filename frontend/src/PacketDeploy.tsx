@@ -22,9 +22,8 @@ export function PacketDeploy(props: PacketDeployProps) {
     const targetErc20 = IERC20Metadata__factory.connect(props.address, web3.library!);
     const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
 
-    // FIXME: Deploy contract
-    const deploy = () => {
-        alert("Deploy")
+    const deployNewDf = async () => {
+        await dfFactory.connect(web3.library?.getSigner()!).deployDf(targetErc20.address);
     }
 
     useEffect(() => {
@@ -66,7 +65,7 @@ export function PacketDeploy(props: PacketDeployProps) {
                     :
                     <div>
                     <p>No Defungify contract exists for that token. Be the first to deploy it.</p>
-                    <Button onClick={deploy}>Deploy</Button>
+                    <Button onClick={deployNewDf}>Deploy</Button>
                     </div>
             }
         </div>
