@@ -11,6 +11,8 @@ import {Allowance} from "./Allowance";
 
 interface PacketDeployProps {
     erc20: IERC20;
+    setDefungify: any;
+    defungify: Defungify | null
 }
 
 export function PacketDeploy(props: PacketDeployProps) {
@@ -19,7 +21,6 @@ export function PacketDeploy(props: PacketDeployProps) {
     const [name, setName] = useState<string | null>(null);
     const [symbol, setSymbol] = useState<string | null>(null);
     const [balance, setBalance] = useState<BigNumber | null>(null);
-    const [defungify, setDefungify] = useState<Defungify | null>(null);
 
     const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
     const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
@@ -31,10 +32,10 @@ export function PacketDeploy(props: PacketDeployProps) {
         const deployedAddress = await dfFactory.deployedContracts(props.erc20.address);
         if (deployedAddress === "0x0000000000000000000000000000000000000000") {
             alert("Deployment failed");
-            setDefungify(null);
+            props.setDefungify(null);
         }
         else {
-            setDefungify(Defungify__factory.connect(deployedAddress, web3.library!));
+            props.setDefungify(Defungify__factory.connect(deployedAddress, web3.library!));
         }
     }
 
@@ -60,17 +61,17 @@ export function PacketDeploy(props: PacketDeployProps) {
                 setBalance(r);
             })
         }
-        if (defungify == null) {
+        if (props.defungify == null) {
             dfFactory.deployedContracts(props.erc20.address).then(r => {
                 if (r === "0x0000000000000000000000000000000000000000") {
-                    setDefungify(null);
+                    props.setDefungify(null);
                 }
                 else {
-                    setDefungify(Defungify__factory.connect(r, web3.library!));
+                    props.setDefungify(Defungify__factory.connect(r, web3.library!));
                 }
             })
         }
-    }, [name, symbol, balance, defungify, metadata, web3.account, web3.library, dfFactory, props.erc20])
+    }, [name, symbol, balance, metadata, web3.account, web3.library, dfFactory, props])
 
     return (
         <div>
@@ -78,10 +79,10 @@ export function PacketDeploy(props: PacketDeployProps) {
             <p><b>Token symbol</b>: {symbol}</p>
             <p><b>Balance</b>: {formatEther(balance ?? 0)}</p>
             {
-                (defungify != null) ?
+                (props.defungify != null) ?
                     <div>
-                        <Allowance defungify={defungify} erc20={props.erc20}/>
-                        <CreatePacketForm defungify={defungify}/>
+                        <Allowance defungify={props.defungify} erc20={props.erc20}/>
+                        <CreatePacketForm defungify={props.defungify}/>
                     </div>
                     :
                     <div>

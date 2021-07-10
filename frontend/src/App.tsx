@@ -7,13 +7,12 @@ import {Header} from "./Header";
 import {PacketDeploy} from "./PacketDeploy";
 import {PacketsList} from "./PacketsList";
 import {Erc20Input} from "./Erc20Input";
-import {IERC20} from "./typechain";
-
-const PLACEHOLDER_ERC20_DEPLOYED = "0xd099F2FD6df4f649B2cD9A80EfCA8d496D9c3825";
+import {Defungify, IERC20} from "./typechain";
 
 function App() {
     const web3 = useWeb3React<Web3Provider>();
     const [erc20, setErc20] = useState<IERC20 | null>(null);
+    const [defungify, setDefungify] = useState<Defungify | null>(null);
 
     return (
         <Container fluid className="mt-2">
@@ -41,17 +40,17 @@ function App() {
                 (web3.active && erc20 != null) ?
                     <Row className="my-2">
                         <Col>
-                            <PacketDeploy erc20={erc20}/>
+                            <PacketDeploy erc20={erc20} defungify={defungify} setDefungify={setDefungify}/>
                         </Col>
                     </Row>
                     : <div/>
             }
 
             {
-                (web3.active && erc20 != null) ?
+                (web3.active && erc20 != null && defungify != null) ?
                     <Row className="my-2">
                         <Col>
-                            <PacketsList/>
+                            <PacketsList defungify={defungify}/>
                         </Col>
                     </Row>
                     : <div/>

@@ -1,6 +1,6 @@
 import {Button, Col, Form} from "react-bootstrap";
 import {useState} from "react";
-import {Defungify, Defungify__factory} from "./typechain";
+import {Defungify} from "./typechain";
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {parseEther} from "ethers/lib/utils";

@@ -1,8 +1,13 @@
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {Button, Col, Row, Table} from "react-bootstrap";
+import {Defungify} from "./typechain";
 
-export function PacketsList() {
+export interface PacketsListProps {
+    defungify: Defungify
+}
+
+export function PacketsList(props: PacketsListProps) {
     const web3 = useWeb3React<Web3Provider>();
 
     // TODO: Make <tr>s a separate component
