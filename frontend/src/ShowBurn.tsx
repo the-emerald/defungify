@@ -6,7 +6,7 @@ export function ShowBurn() {
 
     return (
         <div>
-            <p>Show / burn</p>
+            <h4>Your packets</h4>
         </div>
     )
 }

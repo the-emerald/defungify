@@ -4,7 +4,7 @@ import {Web3Provider} from "@ethersproject/providers";
 import {Connector} from "./Connector";
 import {Col, Container, Row} from "react-bootstrap";
 import {Header} from "./Header";
-import {DepositDeploy} from "./DepositDeploy";
+import {PacketDeploy} from "./PacketDeploy";
 import {ShowBurn} from "./ShowBurn";
 
 
@@ -37,7 +37,7 @@ function App() {
                 web3.active ?
                     <Row className="my-2">
                         <Col>
-                            <DepositDeploy/>
+                            <PacketDeploy/>
                         </Col>
                     </Row>
                     : <div/>
