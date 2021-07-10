@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useWeb3React} from '@web3-react/core';
 import {Web3Provider} from "@ethersproject/providers";
 import {Connector} from "./Connector";
@@ -6,11 +6,13 @@ import {Col, Container, Row} from "react-bootstrap";
 import {Header} from "./Header";
 import {PacketDeploy} from "./PacketDeploy";
 import {PacketsList} from "./PacketsList";
+import {Erc20Input} from "./Erc20Input";
 
 const PLACEHOLDER_ERC20_DEPLOYED = "0xd099F2FD6df4f649B2cD9A80EfCA8d496D9c3825";
 
 function App() {
     const web3 = useWeb3React<Web3Provider>();
+    const [erc20, setErc20] = useState<string | null>(null);
 
     return (
         <Container fluid className="mt-2">
@@ -29,23 +31,23 @@ function App() {
                 web3.active ?
                     <Row className="my-2">
                         <Col>
-                            <p>Enter ERC-20 address here</p>
+                            <Erc20Input setErc20={setErc20}/>
                         </Col>
                     </Row>
                     : <div/>
             }
             {
-                web3.active ?
+                (web3.active && erc20 != null) ?
                     <Row className="my-2">
                         <Col>
-                            <PacketDeploy address={PLACEHOLDER_ERC20_DEPLOYED}/>
+                            <PacketDeploy address={erc20}/>
                         </Col>
                     </Row>
                     : <div/>
             }
 
             {
-                web3.active ?
+                (web3.active && erc20 != null) ?
                     <Row className="my-2">
                         <Col>
                             <PacketsList/>
