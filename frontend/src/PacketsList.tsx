@@ -95,7 +95,7 @@ export function PacketsList(props: PacketsListProps) {
                         </thead>
                         <tbody>
                         {
-                            packets.map((p) => <PacketRow key={p.id} packet={p}/>)
+                            packets.map((p) => <PacketRow key={p.id} packet={p} defungify={props.defungify}/>)
                         }
                         </tbody>
                     </Table>
