@@ -18,7 +18,9 @@ export function Erc20Input(props: Erc20InputProps) {
             props.setErc20(IERC20__factory.connect(address, web3.library!));
         }
         catch (e) {
-            alert("Not a valid address!");
+            if (form.erc20Input.value !== "") {
+                alert("Not a valid address!");
+            }
             return;
         }
     }

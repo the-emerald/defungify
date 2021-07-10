@@ -21,12 +21,12 @@ function App() {
                     <Header/>
                 </Col>
             </Row>
+            <hr/>
             <Row className="my-2">
                 <Col>
                     <Connector/>
                 </Col>
             </Row>
-
             {
                 web3.active ?
                     <Row className="my-2">
@@ -36,6 +36,7 @@ function App() {
                     </Row>
                     : <div/>
             }
+            <hr/>
             {
                 (web3.active && erc20 != null) ?
                     <Row className="my-2">
@@ -45,7 +46,7 @@ function App() {
                     </Row>
                     : <div/>
             }
-
+            <hr/>
             {
                 (web3.active && erc20 != null && defungify != null) ?
                     <Row className="my-2">
@@ -55,7 +56,6 @@ function App() {
                     </Row>
                     : <div/>
             }
-
         </Container>
     );
 }
