@@ -23,7 +23,17 @@ export function PacketDeploy(props: PacketDeployProps) {
     const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
 
     const deployNewDf = async () => {
-        await dfFactory.connect(web3.library?.getSigner()!).deployDf(targetErc20.address);
+        const receipt = await dfFactory.connect(web3.library?.getSigner()!).deployDf(targetErc20.address);
+        await receipt.wait();
+
+        const deployedAddress = await dfFactory.deployedContracts(props.address);
+        if (deployedAddress === "0x0000000000000000000000000000000000000000") {
+            alert("Deployment failed");
+            setDefungifyAddress(null);
+        }
+        else {
+            setDefungifyAddress(deployedAddress);
+        }
     }
 
     useEffect(() => {
