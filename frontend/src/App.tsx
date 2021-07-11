@@ -18,32 +18,26 @@ function App() {
     // Updates defungify on every block
     useEffect(() => {
         // Check defungify factory on every block
-        const checkDefungify = async ()  => {
+        const checkDefungify = async () => {
             if (erc20 !== null) {
-                console.log("Fetching Defungify");
                 const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
                 const a = await dfFactory.deployedContracts(erc20.address);
                 if (a === "0x0000000000000000000000000000000000000000") {
                     setDefungify(null);
-                }
-                else {
+                } else {
                     setDefungify(Defungify__factory.connect(a, web3.library!));
                 }
             }
         }
 
         // Register
-        console.log("Registering listener for defungify");
         web3.library?.on("block", checkDefungify);
 
         if (web3.library !== null) {
-            checkDefungify().then(() => {
-                console.log("Fetching defungify ONCE");
-            });
+            checkDefungify().then();
         }
 
         return () => {
-            console.log("Removing listener for defungify");
             web3.library?.removeListener("block", checkDefungify)
         }
     }, [erc20, web3.library, web3.account, web3.chainId]);

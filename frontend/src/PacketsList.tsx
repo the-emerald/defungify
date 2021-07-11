@@ -28,7 +28,6 @@ export function PacketsList(props: PacketsListProps) {
         const defungify_ = Defungify__factory.connect(props.defungify.address, web3.library!);
 
         const enumeratePackets = async () => {
-            console.log("Enumerating packets");
             const decimals = await IERC20Metadata__factory.connect(await defungify_.token(), web3.library!)
                 .decimals();
             const numberOwned = (await defungify_.balanceOf(web3.account!)).toNumber();
@@ -64,16 +63,12 @@ export function PacketsList(props: PacketsListProps) {
             ]
         };
 
-        console.log("Registering packets listener");
         defungify_.on(filterTransferIn, enumeratePackets);
         defungify_.on(filterTransferOut, enumeratePackets);
 
-        enumeratePackets().then(() => {
-            console.log("Enumerating ONCE")
-        });
+        enumeratePackets().then();
 
         return () => {
-            console.log("Removing packets listener");
             defungify_.removeAllListeners();
         }
 

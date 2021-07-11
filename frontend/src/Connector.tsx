@@ -6,7 +6,6 @@ import {AccountInfo} from "./AccountInfo";
 
 export const injectedConnector = new InjectedConnector({
     supportedChainIds: [
-        1,      // Mainnet
         100,    // xDAI
         4,      // Rinkeby
         137,    // Polygon

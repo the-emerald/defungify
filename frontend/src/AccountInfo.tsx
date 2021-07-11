@@ -6,13 +6,11 @@ import {BigNumber} from "ethers";
 import {formatEther} from "ethers/lib/utils";
 
 let chainNames: Map<number, string> = new Map();
-chainNames.set(1, "mainnet");
 chainNames.set(100, "xdai");
 chainNames.set(137, "polygon");
 chainNames.set(4, "rinkeby (TESTNET)")
 
 let nativeTokenNames: Map<number, string> = new Map();
-nativeTokenNames.set(1, "ETH");
 nativeTokenNames.set(100, "xDAI");
 nativeTokenNames.set(137, "MATIC");
 nativeTokenNames.set(4, "ETH")

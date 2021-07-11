@@ -35,7 +35,6 @@ export function PacketDeploy(props: PacketDeployProps) {
         // Function called on new block
         const updateTokenBalance = async () => {
             const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
-            console.log("Fetching ERC-20 balance");
             try {
                 const balanceOf = await metadata.balanceOf(web3.account!);
                 setBalance(balanceOf);
@@ -70,7 +69,6 @@ export function PacketDeploy(props: PacketDeployProps) {
 
         // Cleanup
         return () => {
-            console.log("Removing listener for ERC-20 information");
             erc20.removeAllListeners();
         }
 
@@ -80,7 +78,6 @@ export function PacketDeploy(props: PacketDeployProps) {
     useEffect(() => {
         const getTokenInformation = async () => {
             const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
-            console.log("Fetching ERC-20 Information");
             try {
                 const name = await metadata.name();
                 setName(name);
