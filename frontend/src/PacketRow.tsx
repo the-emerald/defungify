@@ -1,6 +1,6 @@
 import {Packet} from "./PacketsList";
 import {Button, Col, Form, Modal} from "react-bootstrap";
-import {formatEther} from "ethers/lib/utils";
+import {formatUnits} from "ethers/lib/utils";
 import {Defungify} from "./typechain";
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
@@ -57,7 +57,7 @@ export function PacketRow(props: PacketRowProps) {
         <>
             <tr>
                 <td>{props.packet.id}</td>
-                <td>{formatEther(props.packet.amount)}</td>
+                <td>{formatUnits(props.packet.amount, props.packet.decimals)}</td>
                 <td>{props.packet.message}</td>
                 <td><Button variant="danger" onClick={clickBurn}>Burn</Button></td>
                 <td><Button onClick={clickTransfer}>Transfer</Button></td>

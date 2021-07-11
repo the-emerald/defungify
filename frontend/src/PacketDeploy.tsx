@@ -6,7 +6,7 @@ import {Defungify, Defungify__factory, DefungifyFactory__factory, IERC20, IERC20
 import {useEffect, useState} from "react";
 import {factoryLocation} from "./factoryLocation";
 import {BigNumber, EventFilter} from "ethers";
-import {formatEther, hexZeroPad, id} from "ethers/lib/utils";
+import {formatUnits, hexZeroPad, id} from "ethers/lib/utils";
 import {Allowance} from "./Allowance";
 
 interface PacketDeployProps {
@@ -21,6 +21,7 @@ export function PacketDeploy(props: PacketDeployProps) {
     const [name, setName] = useState<string | null>(null);
     const [symbol, setSymbol] = useState<string | null>(null);
     const [balance, setBalance] = useState<BigNumber | null>(null);
+    const [decimals, setDecimals] = useState<number | null>(null);
 
     const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
     const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
@@ -33,8 +34,7 @@ export function PacketDeploy(props: PacketDeployProps) {
         if (deployedAddress === "0x0000000000000000000000000000000000000000") {
             alert("Deployment failed");
             props.setDefungify(null);
-        }
-        else {
+        } else {
             props.setDefungify(Defungify__factory.connect(deployedAddress, web3.library!));
         }
     }
@@ -45,22 +45,23 @@ export function PacketDeploy(props: PacketDeployProps) {
     }
 
     useEffect(() => {
-        if (name == null) {
-            metadata.name().then(r => {
-                setName(r)
-            })
-                .catch((e) => handleErcError(e));
-        }
-        if (symbol == null) {
-            metadata.symbol().then(r => {
-                setSymbol(r)
-            })
-        }
-        if (balance == null) {
-            metadata.balanceOf(web3.account!).then(r => {
-                setBalance(r);
-            })
-        }
+        metadata.name().then(r => {
+            setName(r)
+        })
+            .catch((e) => handleErcError(e));
+
+        metadata.symbol().then(r => {
+            setSymbol(r)
+        })
+
+        metadata.balanceOf(web3.account!).then(r => {
+            setBalance(r);
+        })
+
+        metadata.decimals().then(r => {
+            setDecimals(r);
+        })
+
     }, [name, symbol, balance, metadata, web3.account, web3.library])
 
     useEffect(() => {
@@ -68,8 +69,7 @@ export function PacketDeploy(props: PacketDeployProps) {
             dfFactory.deployedContracts(props.erc20.address).then(r => {
                 if (r === "0x0000000000000000000000000000000000000000") {
                     props.setDefungify(null);
-                }
-                else {
+                } else {
                     props.setDefungify(Defungify__factory.connect(r, web3.library!));
                 }
             })
@@ -112,17 +112,17 @@ export function PacketDeploy(props: PacketDeployProps) {
         <div>
             <p><b>Token name</b>: {name}</p>
             <p><b>Token symbol</b>: {symbol}</p>
-            <p><b>Balance</b>: {formatEther(balance ?? 0)}</p>
+            <p><b>Balance</b>: {formatUnits(balance ?? 0, decimals!)}</p>
             {
                 (props.defungify != null) ?
                     <div>
                         <Allowance defungify={props.defungify} erc20={props.erc20}/>
-                        <CreatePacketForm defungify={props.defungify}/>
+                        <CreatePacketForm defungify={props.defungify} decimals={decimals!}/>
                     </div>
                     :
                     <div>
-                    <p>No Defungify contract exists for that token. Be the first to deploy it.</p>
-                    <Button onClick={deployNewDf}>Deploy</Button>
+                        <p>No Defungify contract exists for that token. Be the first to deploy it.</p>
+                        <Button onClick={deployNewDf}>Deploy</Button>
                     </div>
             }
         </div>

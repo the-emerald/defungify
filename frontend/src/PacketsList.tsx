@@ -1,7 +1,7 @@
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {Col, Row, Table} from "react-bootstrap";
-import {Defungify} from "./typechain";
+import {Defungify, IERC20Metadata__factory} from "./typechain";
 import {useEffect, useState} from "react";
 import {hexZeroPad, id} from "ethers/lib/utils";
 import {EventFilter} from "ethers/lib/ethers";
@@ -15,6 +15,7 @@ export interface PacketsListProps {
 export interface Packet {
     id: number,
     amount: BigNumber,
+    decimals: number
     message: string
 }
 
@@ -22,17 +23,19 @@ export function PacketsList(props: PacketsListProps) {
     const web3 = useWeb3React<Web3Provider>();
     const [packets, setPackets] = useState<Array<Packet>>([]);
 
-
     useEffect(() => {
         const enumeratePackets = async () => {
+            const decimals = await IERC20Metadata__factory.connect(await props.defungify.token(), web3.library!)
+                .decimals();
             const numberOwned = (await props.defungify.balanceOf(web3.account!)).toNumber();
             let ps = [];
             for (let i = 0; i < numberOwned; i++) {
                 const id = await props.defungify.tokenOfOwnerByIndex(web3.account!, i);
                 let packet: Packet = {
+                    decimals: decimals,
                     id: id.toNumber(),
                     amount: await props.defungify.amountInside(id),
-                    message: await props.defungify.tokenURI(id),
+                    message: await props.defungify.tokenURI(id)
                 }
                 ps.push(packet)
             }
@@ -73,7 +76,7 @@ export function PacketsList(props: PacketsListProps) {
             setPackets(r);
         });
 
-    }, [props.defungify, web3.account])
+    }, [props.defungify, web3.account, web3.library])
 
     return (
         <div>

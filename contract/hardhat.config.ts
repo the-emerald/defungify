@@ -43,9 +43,18 @@ export default {
         mnemonic: MNEMONIC
       },
     },
+
     xdai: {
       url: `https://rpc.xdaichain.com`,
       chainId: 100,
+      accounts: {
+        mnemonic: MNEMONIC
+      },
+      gasPrice: 1_000_000_000 // 1 Gwei
+    },
+
+    matic: {
+      url: `https://rpc-mainnet.matic.network`,
       accounts: {
         mnemonic: MNEMONIC
       },

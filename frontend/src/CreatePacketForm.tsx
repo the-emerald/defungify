@@ -3,10 +3,11 @@ import {useState} from "react";
 import {Defungify} from "./typechain";
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
-import {parseEther} from "ethers/lib/utils";
+import {parseUnits} from "ethers/lib/utils";
 
 export interface CreatePacketFormProps {
-    defungify: Defungify
+    defungify: Defungify,
+    decimals: number
 }
 
 export function CreatePacketForm(props: CreatePacketFormProps) {
@@ -21,7 +22,7 @@ export function CreatePacketForm(props: CreatePacketFormProps) {
         if (form.checkValidity() !== false) {
             const receipt = await props.defungify
                 .connect(web3.library?.getSigner()!)
-                .safeMint(web3.account!, parseEther(form.packetAmount.value), form.packetMessage.value);
+                .safeMint(web3.account!, parseUnits(form.packetAmount.value, props.decimals), form.packetMessage.value);
             await receipt.wait();
         }
         setValidated(true);
