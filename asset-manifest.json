@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/defungify/static/js/main.c5efdb37.chunk.js",
-    "main.js.map": "/defungify/static/js/main.c5efdb37.chunk.js.map",
+    "main.js": "/defungify/static/js/main.724b4d35.chunk.js",
+    "main.js.map": "/defungify/static/js/main.724b4d35.chunk.js.map",
     "runtime-main.js": "/defungify/static/js/runtime-main.301cf9f1.js",
     "runtime-main.js.map": "/defungify/static/js/runtime-main.301cf9f1.js.map",
     "static/css/2.150d169a.chunk.css": "/defungify/static/css/2.150d169a.chunk.css",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.301cf9f1.js",
     "static/css/2.150d169a.chunk.css",
     "static/js/2.acb881af.chunk.js",
-    "static/js/main.c5efdb37.chunk.js"
+    "static/js/main.724b4d35.chunk.js"
   ]
 }
