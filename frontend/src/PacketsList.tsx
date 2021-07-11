@@ -1,7 +1,7 @@
 import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {Col, Row, Table} from "react-bootstrap";
-import {Defungify, IERC20Metadata__factory} from "./typechain";
+import {Defungify, Defungify__factory, IERC20Metadata__factory} from "./typechain";
 import {useEffect, useState} from "react";
 import {hexZeroPad, id} from "ethers/lib/utils";
 import {EventFilter} from "ethers/lib/ethers";
@@ -23,23 +23,27 @@ export function PacketsList(props: PacketsListProps) {
     const web3 = useWeb3React<Web3Provider>();
     const [packets, setPackets] = useState<Array<Packet>>([]);
 
+    // Update packet list on send and receive
     useEffect(() => {
+        const defungify_ = Defungify__factory.connect(props.defungify.address, web3.library!);
+
         const enumeratePackets = async () => {
-            const decimals = await IERC20Metadata__factory.connect(await props.defungify.token(), web3.library!)
+            console.log("Enumerating packets");
+            const decimals = await IERC20Metadata__factory.connect(await defungify_.token(), web3.library!)
                 .decimals();
-            const numberOwned = (await props.defungify.balanceOf(web3.account!)).toNumber();
+            const numberOwned = (await defungify_.balanceOf(web3.account!)).toNumber();
             let ps = [];
             for (let i = 0; i < numberOwned; i++) {
-                const id = await props.defungify.tokenOfOwnerByIndex(web3.account!, i);
+                const id = await defungify_.tokenOfOwnerByIndex(web3.account!, i);
                 let packet: Packet = {
                     decimals: decimals,
                     id: id.toNumber(),
-                    amount: await props.defungify.amountInside(id),
-                    message: await props.defungify.tokenURI(id)
+                    amount: await defungify_.amountInside(id),
+                    message: await defungify_.tokenURI(id)
                 }
                 ps.push(packet)
             }
-            return ps;
+            setPackets(ps);
         };
 
         const filterTransferOut: EventFilter = {
@@ -60,23 +64,18 @@ export function PacketsList(props: PacketsListProps) {
             ]
         };
 
-        props.defungify.on(filterTransferIn, () => {
-            enumeratePackets().then(r => {
-                setPackets(r);
-            })
-        });
+        console.log("Registering packets listener");
+        defungify_.on(filterTransferIn, enumeratePackets);
+        defungify_.on(filterTransferOut, enumeratePackets);
 
-        props.defungify.on(filterTransferOut, () => {
-            enumeratePackets().then(r => {
-                setPackets(r);
-            })
-        })
+        enumeratePackets().then(() => {console.log("Enumerating ONCE")});
 
-        enumeratePackets().then(r => {
-            setPackets(r);
-        });
+        return () => {
+            console.log("Removing packets listener");
+            defungify_.removeAllListeners();
+        }
 
-    }, [props.defungify, web3.account, web3.library])
+    }, [props.defungify.address, web3.account, web3.library])
 
     return (
         <div>
