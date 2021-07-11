@@ -68,7 +68,9 @@ export function PacketsList(props: PacketsListProps) {
         defungify_.on(filterTransferIn, enumeratePackets);
         defungify_.on(filterTransferOut, enumeratePackets);
 
-        enumeratePackets().then(() => {console.log("Enumerating ONCE")});
+        enumeratePackets().then(() => {
+            console.log("Enumerating ONCE")
+        });
 
         return () => {
             console.log("Removing packets listener");
@@ -97,11 +99,22 @@ export function PacketsList(props: PacketsListProps) {
                         </thead>
                         <tbody>
                         {
-                            packets.map((p) => <PacketRow
-                                key={p.id}
-                                packet={p}
-                                defungify={props.defungify}/>
-                            )
+                            packets.length !== 0 ?
+                                packets.map((p) => <PacketRow
+                                    key={p.id}
+                                    packet={p}
+                                    defungify={props.defungify}/>
+                                )
+                                :
+                                <tr>
+                                    <td>
+                                        You have no packets yet! Go make some.
+                                    </td>
+                                    <td/>
+                                    <td/>
+                                    <td/>
+                                    <td/>
+                                </tr>
                         }
                         </tbody>
                     </Table>

@@ -36,6 +36,12 @@ function App() {
         console.log("Registering listener for defungify");
         web3.library?.on("block", checkDefungify);
 
+        if (web3.library !== null) {
+            checkDefungify().then(() => {
+                console.log("Fetching defungify ONCE");
+            });
+        }
+
         return () => {
             console.log("Removing listener for defungify");
             web3.library?.removeListener("block", checkDefungify)

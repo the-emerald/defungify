@@ -2,11 +2,12 @@ import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 import {Button} from "react-bootstrap";
 import {CreatePacketForm} from "./CreatePacketForm";
-import {Defungify, DefungifyFactory, IERC20, IERC20Metadata__factory} from "./typechain";
+import {Defungify, DefungifyFactory, ERC20__factory, IERC20, IERC20Metadata__factory} from "./typechain";
 import {useEffect, useState} from "react";
 import {BigNumber} from "ethers";
-import {formatUnits} from "ethers/lib/utils";
+import {formatUnits, hexZeroPad, id} from "ethers/lib/utils";
 import {Allowance} from "./Allowance";
+import {EventFilter} from "ethers/lib/ethers";
 
 
 interface PacketDeployProps {
@@ -28,8 +29,9 @@ export function PacketDeploy(props: PacketDeployProps) {
         await receipt.wait();
     }
 
-    // Updates ERC-20 token balance on every block.
+    // Updates ERC-20 token balance on send and receive
     useEffect(() => {
+        const erc20 = ERC20__factory.connect(props.erc20.address, web3.library!);
         // Function called on new block
         const updateTokenBalance = async () => {
             const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
@@ -43,19 +45,38 @@ export function PacketDeploy(props: PacketDeployProps) {
             }
         }
 
-        // Register listener
-        console.log("Registering listener for ERC-20 information");
-        web3.library?.on("block", updateTokenBalance);
+        // Register listeners
+        const filterTransferOut: EventFilter = {
+            address: erc20.address,
+            topics: [
+                id("Transfer(address,address,uint256)"),
+                hexZeroPad(web3.account!, 32)
+            ]
+        };
+
+        const filterTransferIn: EventFilter = {
+            address: erc20.address,
+            topics: [
+                id("Transfer(address,address,uint256)"),
+                // @ts-ignore
+                null,
+                hexZeroPad(web3.account!, 32)
+            ]
+        };
+
+        erc20.on(filterTransferIn, updateTokenBalance);
+        erc20.on(filterTransferOut, updateTokenBalance);
+        updateTokenBalance().then(() => {});
 
         // Cleanup
         return () => {
             console.log("Removing listener for ERC-20 information");
-            web3.library?.removeListener("block", updateTokenBalance);
+            erc20.removeAllListeners();
         }
 
     }, [props.erc20.address, web3.account, web3.library, web3.chainId])
 
-    // Updates ERC-20 information on token acquire
+    // Updates ERC-20 information on token address update
     useEffect(() => {
         const getTokenInformation = async () => {
             const metadata = IERC20Metadata__factory.connect(props.erc20.address, web3.library!);
