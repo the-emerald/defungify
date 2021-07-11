@@ -19,8 +19,8 @@ function App() {
     useEffect(() => {
         // Check defungify factory on every block
         const checkDefungify = async () => {
-            if (erc20 !== null) {
-                const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library!);
+            if (erc20 !== null && web3.library !== undefined) {
+                const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library);
                 const a = await dfFactory.deployedContracts(erc20.address);
                 if (a === "0x0000000000000000000000000000000000000000") {
                     setDefungify(null);
