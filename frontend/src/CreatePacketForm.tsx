@@ -35,7 +35,12 @@ export function CreatePacketForm(props: CreatePacketFormProps) {
                     <Col xs="auto">
                         <Form.Group controlId="packetAmount">
                             <Form.Label>Amount</Form.Label>
-                            <Form.Control required type="number" placeholder="0"/>
+                            <Form.Control
+                                required
+                                type="number"
+                                placeholder="0"
+                                step=".000000000000000001"
+                                min=".000000000000000001"/>
                             <Form.Control.Feedback type="invalid">Required</Form.Control.Feedback>
                         </Form.Group>
                     </Col>
