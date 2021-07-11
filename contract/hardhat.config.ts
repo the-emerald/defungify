@@ -42,6 +42,14 @@ export default {
       accounts: {
         mnemonic: MNEMONIC
       },
+    },
+    xdai: {
+      url: `https://rpc.xdaichain.com`,
+      chainId: 100,
+      accounts: {
+        mnemonic: MNEMONIC
+      },
+      gasPrice: 1_000_000_000 // 1 Gwei
     }
   },
 };
