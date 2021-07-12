@@ -9,6 +9,8 @@ import {PacketsList} from "./PacketsList";
 import {Erc20Input} from "./Erc20Input";
 import {Defungify, Defungify__factory, DefungifyFactory__factory, IERC20} from "./typechain";
 import {factoryLocation} from "./factoryLocation";
+import {EventFilter} from "ethers/lib/ethers";
+import {id} from "ethers/lib/utils";
 
 function App() {
     const web3 = useWeb3React<Web3Provider>();
@@ -30,15 +32,30 @@ function App() {
             }
         }
 
+        if (web3.library !== undefined) {
+            const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library);
+            const filterDeployed: EventFilter = {
+                address: dfFactory.address,
+                topics: [
+                    id("Created(address,address,address)"),
+                ]
+            };
+            dfFactory.on(filterDeployed, checkDefungify);
+        }
+
+
         // Register
         web3.library?.on("block", checkDefungify);
 
-        if (web3.library !== null) {
+        if (web3.library !== undefined) {
             checkDefungify().then();
         }
 
         return () => {
-            web3.library?.removeListener("block", checkDefungify)
+            if (web3.library !== undefined) {
+                const dfFactory = DefungifyFactory__factory.connect(factoryLocation.get(web3.chainId!)!, web3.library);
+                dfFactory.removeAllListeners();
+            }
         }
     }, [erc20, web3.library, web3.account, web3.chainId]);
 
