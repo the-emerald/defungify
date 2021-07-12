@@ -4,7 +4,7 @@ import "hardhat-gas-reporter"
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
-import {ALCHEMY_API_KEY, MNEMONIC} from "./secrets";
+import {ALCHEMY_API_KEY_MAIN, ALCHEMY_API_KEY_RIN, MNEMONIC} from "./secrets";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -38,7 +38,7 @@ export default {
 
   networks: {
     rinkeby: {
-      url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY_RIN}`,
       accounts: {
         mnemonic: MNEMONIC
       },
@@ -59,6 +59,14 @@ export default {
         mnemonic: MNEMONIC
       },
       gasPrice: 1_000_000_000 // 1 Gwei
+    },
+
+    mainnet: {
+      url: `https://eth.alchemyapi.io/v2/${ALCHEMY_API_KEY_MAIN}`,
+      accounts: {
+        mnemonic: MNEMONIC
+      },
+      gasPrice: 6_000_000_000 // 6 Gwei
     }
   },
 };

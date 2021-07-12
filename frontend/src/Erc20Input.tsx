@@ -5,7 +5,7 @@ import {useWeb3React} from "@web3-react/core";
 import {Web3Provider} from "@ethersproject/providers";
 
 export let presetErc20s: Map<number, Array<[string, string]>> = new Map();
-presetErc20s.set(1, []);
+presetErc20s.set(1, [["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "USDC"], ["0x6b175474e89094c44da98b954eedeac495271d0f", "DAI"]]);
 presetErc20s.set(100, [["0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d", "wxDAI"]]);
 presetErc20s.set(4, []);
 presetErc20s.set(137, [["0x2791bca1f2de4661ed88a30c99a7a9449aa84174", "USDC"], ["0x8f3cf7ad23cd3cadbd9735aff958023239c6a063", "DAI"]]);
