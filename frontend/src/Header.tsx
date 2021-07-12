@@ -13,7 +13,8 @@ export function Header() {
                     Source code available here.
                 </a>
             </p>
-            <p><b>Available on</b>: polygon, xdai, rinkeby. Mainnet coming soon!</p>
+            <p><b>Available on</b>: mainnet, polygon, xdai, rinkeby.</p>
+            <p><i>Enjoyed Defungify? Send me a tip at <code>esmeralda.eth</code></i>.</p>
         </div>
     )
 }
