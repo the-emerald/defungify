@@ -4,6 +4,7 @@ import "hardhat-gas-reporter"
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
+import "@eth-optimism/hardhat-ovm"
 import {ALCHEMY_API_KEY_MAIN, ALCHEMY_API_KEY_RIN, MNEMONIC} from "./secrets"
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -74,11 +75,12 @@ export default {
       accounts: {
         mnemonic: MNEMONIC
       },
-      ovm: true
+      ovm: true,
+      gasPrice: 15000000
     }
   },
 
   ovm: {
-    solcVersion: '0.8.6'
+    solcVersion: '0.8.4'
   }
 };
